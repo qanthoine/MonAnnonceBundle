@@ -38,6 +38,8 @@ class ApiController extends Controller
             $annonce = new Annonce();
             $notice = "Annonce créee";
             $page_title ="Nouvelle Annonce";
+            $form = $this->createForm(AnnonceType::class, $annonce);
+            $form->handleRequest($request);
         }
         else{
             $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('slug' => $slug));
@@ -48,9 +50,10 @@ class ApiController extends Controller
             }
             $notice = "Annonce modifiée";
             $page_title ="Edition de l'Annonce";
+            $form = $this->createForm(AnnonceType::class, $annonce);
+            $form->remove('images');
+            $form->handleRequest($request);
         }
-        $form = $this->createForm(AnnonceType::class, $annonce);
-        $form->handleRequest($request);
         if($form->isValid())
         {
             $em = $this->getDoctrine()->getManager();

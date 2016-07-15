@@ -44,7 +44,7 @@
             {{ form_errors(form.villes) }}
             {{ form_widget(form.villes) }}
         </div>
-        {% if annonce is defined %}
+        {% if form.images is  defined %}
             <div class="label">
                 {{ form_label(form.images, "Images : ") }}
             </div>
