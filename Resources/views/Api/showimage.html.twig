@@ -1,0 +1,8 @@
+{% extends "MonApiBundle::layout.html.twig" %}
+{% block title %}Visualisation{% endblock title %}
+{% block body %}
+    <div class="visu_image">
+        <h1>Visualisation d'image</h1>
+        <img src="{{ asset('uploads/' ~ image.image) }}" alt="{{ image.image }}"/>
+    </div>
+{% endblock body %}

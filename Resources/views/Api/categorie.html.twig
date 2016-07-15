@@ -1,0 +1,10 @@
+ <h1>Ajouter une Categorie !</h1>
+ {{ form_start(form) }}
+ <div>
+     <div class="label">
+         {{ form_label(form.name, "Titre : *") }}
+     </div>
+     {{ form_errors(form.name) }}
+     {{ form_widget(form.name) }}
+ </div>
+ {{ form_end(form)}}

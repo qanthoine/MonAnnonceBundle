@@ -1,0 +1,10 @@
+<link rel="stylesheet" href="{{ asset('bundles/monapi/css/mon_api.css') }}" type="text/css">
+<title>{% block title %}{% endblock title %}</title>
+<body>
+    <div class="main_title">
+        <h1>Mon APInterface</h1>
+        <a href="{{ path('mon_api_homepage') }}"><input type="button" value="Acceuil"></a> <a href="{{ path('mon_api_add') }}"><input type="button" value="Ajouter une annonce"></a> <a href=""><input type="button" value="Recherche"></a>
+    </div>
+    {% block body %}{% endblock body %}
+    {% block js %}{% endblock js %}
+</body>

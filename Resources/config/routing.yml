@@ -1,0 +1,18 @@
+mon_api_homepage:
+    path:     /
+    defaults: { _controller: MonApiBundle:Api:index }
+mon_api_add:
+    path:     /add
+    defaults: { _controller: MonApiBundle:Api:add }
+mon_api_edit:
+    path:     /edit/{slug}
+    defaults: { _controller: MonApiBundle:Api:add }
+mon_api_delete:
+    path:     /delete/{slug}
+    defaults: { _controller: MonApiBundle:Api:delete }
+mon_api_show:
+    path:     /show/{slug}
+    defaults: { _controller: MonApiBundle:Api:show }
+mon_api_image:
+    path:     /show/image/{image}
+    defaults: { _controller: MonApiBundle:Api:showimage }

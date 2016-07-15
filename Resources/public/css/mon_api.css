@@ -1,0 +1,100 @@
+.main_title
+{
+    background-color: #5eb5e0;
+}
+body
+{
+    background-color: #9acfea;
+}
+.add
+{
+    margin-left: 30%;
+}
+.label
+{
+    border: solid red 3px;
+    border-radius: 5px;
+    max-width: 20%;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.warning
+{
+    border: orangered 3px solid;
+    border-radius: 6px;
+    width: 50%;
+    margin: 10px;
+}
+.erreur
+{
+    background-color: #F7819F;
+    border: solid black 2px;
+    border-radius: 5px;
+    max-width: 20%;
+    text-align: center;
+    padding: 5px;
+}
+.annonce
+{
+    border: 2px solid black;
+    max-width: 30%;
+    min-width: 30%;
+    max-height: 30%;
+    min-height: 30%;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    float: left;
+    margin-left: 20px;
+}
+.action
+{
+    text-align: center;
+}
+.titre
+{
+    text-align: center;
+}
+.categorie
+{
+    text-align: center;
+}
+.prix
+{
+    text-align: right;
+}
+.ville
+{
+    text-align: right;
+}
+.date
+{
+    text-align: right;
+}
+.description
+{
+    margin: 15px;
+    min-height: 10%;
+    max-height: 10%;
+}
+.visu_image
+{
+    text-align: center;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.message
+{
+    margin: 15px;
+    text-align: center;
+    border: solid black 5px;
+    border-radius: 5px;
+}
+.new_categorie
+{
+    border: solid black 1px;
+    padding: 5px;
+    margin: 15px;
+    max-width: 30%;
+}

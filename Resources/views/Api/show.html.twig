@@ -1,0 +1,35 @@
+{% extends "MonApiBundle::layout.html.twig" %}
+{% block title %}{{ annonce.titre }}{% endblock title %}
+{% block body %}
+        <div class="annonce_show">
+            <div class="titre">
+                {{ annonce.titre }}
+            </div>
+            <div class="categorie">
+                [ {{ annonce.categories.name }} ]
+            </div>
+            <div class="description">
+                {{ annonce.description }}
+            </div>
+            <div class="ville">
+                {{ annonce.villes }}
+            </div>
+            <div class="prix">
+                {% if annonce.prix == null %}
+                    0 €
+                {% else %}
+                    {{ annonce.prix }} €
+                {% endif %}
+            </div>
+            <div class="date">
+                Ecrite le : {{ annonce.date|date("d/m/Y") }}
+            </div>
+            {% for image in annonce.images %}
+                {% if image.image != null %}
+                    <a href="{{ path('mon_api_image', {'image' : image.image}) }}" target="_blank"><img src="{{ asset('uploads/' ~ image.image) }}" height="200px" width="200px" alt="{{ image.image }}"/></a>
+                {% else %}
+                    <img src="{{ asset('bundles/monapi/css/no_apercu.jpg')}}" alt="Aucun aperçu n'est disponible"/>
+                {% endif %}
+            {% endfor %}
+        </div>
+{% endblock body %}
