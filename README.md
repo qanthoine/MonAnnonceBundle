@@ -19,5 +19,9 @@
         resource: "@MonApiBundle/Resources/config/routing.yml"
         prefix:   /
 </code></pre>
-
+Installer les bases de données.<br>
+<pre><code>php bin/console dotrine:schema:update --force</code></pre>
+Ouvrir le dossier SQL et injecter les données (SQL/ville_france).<br>
+Installer les assets.<br>
+<pre><code>php bin/console asset:install --symlink</code><pre>
 
