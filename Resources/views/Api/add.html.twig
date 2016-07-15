@@ -1,0 +1,62 @@
+{% extends "MonApiBundle::layout.html.twig" %}
+{% block title %}{{ titre }}{% endblock title %}
+{% block body %}
+    <div class="add">
+        <h1>{{ titre }}</h1>
+        {{ form_start(form) }}
+        <div>
+            <div class="label">
+                {{ form_label(form.titre, "Titre : *") }}
+            </div>
+                {{ form_errors(form.titre) }}
+                {{ form_widget(form.titre) }}
+        </div>
+        <div>
+            <div class="label">
+                {{ form_label(form.description, "Description : *") }}
+            </div>
+                {{ form_errors(form.description) }}
+                {{ form_widget(form.description) }}
+        </div>
+        <div>
+            <div class="label">
+                {{ form_label(form.prix, "Prix : ") }}
+            </div>
+                {{ form_errors(form.prix) }}
+                {{ form_widget(form.prix) }}
+        </div>
+        <div>
+            <div class="label">
+                {{ form_label(form.categories, "Categorie : ") }}
+            </div>
+            {{ form_errors(form.categories) }}
+            {{ form_widget(form.categories) }}
+        </div>
+        <div>
+            <div class="label">
+                {{ form_label(form.villes, "Code Postal : *") }}
+            </div>
+            {% for flashMessage in app.session.flashbag.get('ville') %}
+                <div class="erreur">
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {{ form_errors(form.villes) }}
+            {{ form_widget(form.villes) }}
+        </div>
+        {% if annonce is defined %}
+            <div class="label">
+                {{ form_label(form.images, "Images : ") }}
+            </div>
+            <a href="#" id="insert_image">Ajouter une autre image</a>
+            {{ form_widget(form.images) }}
+        {% endif %}
+        {{ form_end(form)}}
+    </div>
+
+{% endblock body %}
+
+{% block js %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <script src="{{ asset('bundles/monapi/js/Image.js') }}"></script>
+{% endblock js %}
