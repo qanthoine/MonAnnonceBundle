@@ -16,3 +16,9 @@ mon_api_show:
 mon_api_image:
     path:     /show/image/{image}
     defaults: { _controller: MonApiBundle:Api:showimage }
+mon_api_search_empty:
+    path:     /search/
+    defaults: { _controller: MonApiBundle:Api:search }
+mon_api_search_full:
+    path:     /search/{categorie}/{ville}
+    defaults: { _controller: MonApiBundle:Api:search }

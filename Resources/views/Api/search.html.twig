@@ -1,0 +1,44 @@
+{% extends "MonApiBundle::layout.html.twig" %}
+{% block title %}Recherche{% endblock title %}
+{% block body %}
+    {% for categorie in categorie %}
+        <p>{{ categorie.name }}</p>
+        {% for ville in ville if ville.categories == categorie %}
+            <a href="{{ path('mon_api_search_full', {'categorie' : categorie.slug, 'ville' : ville.villes }) }}"><input type="button" value="{{ ville.villes }}"></a>
+        {% else %}
+            <p>Pas d'annonces pour cette categorie</p>
+        {% endfor %}
+    {% endfor %}
+    <h1>Liste des Annonce</h1>
+    {% for annonce in annonce %}
+        <div class="annonce">
+            <div class="titre">
+                {{ annonce.titre }}
+            </div>
+            <div class="categorie">
+                [ {{ annonce.categories.name }} ]
+            </div>
+            <div class="description">
+                {{ annonce.description }}
+            </div>
+            <div class="ville">
+                {{ annonce.villes }}
+            </div>
+            <div class="prix">
+                {% if annonce.prix == null %}
+                    0 €
+                {% else %}
+                    {{ annonce.prix }} €
+                {% endif %}
+            </div>
+            <div class="date">
+                {{ annonce.date|date("d/m/Y") }}
+            </div>
+            <div class="action">
+                <a href="{{ path('mon_api_show', {'slug' : annonce.slug }) }}"><input type="button" value="Voir"></a>
+                <a href="{{ path('mon_api_edit', {'slug' : annonce.slug }) }}"><input type="button" value="Modifier"></a>
+                <a href="{{ path('mon_api_delete', {'slug' : annonce.slug }) }}"><input type="button" value="Supprimer"></a>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock body %}

@@ -112,4 +112,28 @@ class ApiController extends Controller
         $request->getSession()->getFlashBag()->add('message', 'Annonce supprimée !');
         return $this->redirectToRoute('mon_api_homepage');
     }
+    public function searchAction(Request $request, $categorie = null, $ville = null)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($categorie)) // Categorie est null, j'affiche toutes les categories puis toutes les villes de chaque categorie
+        {
+            $categorie = $em->getRepository('MonApiBundle:Categories')->findAll();
+            $ville = $em->getRepository('MonApiBundle:Annonce')->findVilles();
+            return $this->render('MonApiBundle:Api:search.html.twig', array('categorie' => $categorie, 'ville' => $ville));
+        }
+        else
+        {
+            if(is_null($ville))
+            {
+                $ville = $em->getRepository('MonApiBundle:Annonce')->findOne();
+                return $this->render('MonApiBundle:Api:search.html.twig', array('categorie' => $categorie, 'ville' => $ville));
+            }
+            else
+            {
+                $categorie_entity = $em->getRepository('MonApiBundle:Categories')->findOneby(array('slug' => $categorie));
+                $annonce = $em->getRepository('MonApiBundle:Annonce')->findCateVille($categorie_entity, $ville);
+                return $this->render('MonApiBundle:Api:search.html.twig', array('annonce' => $annonce, 'categorie' => $categorie, 'ville' => $ville));
+            }
+        }
+    }
 }
