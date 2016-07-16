@@ -3,12 +3,13 @@
 {% block body %}
     {% for categorie in categorie %}
         <p>{{ categorie.name }}</p>
-        {% for ville in ville if ville.categories == categorie %}
+        {% for ville in ville if categorie == ville.categories %}
             <a href="{{ path('mon_api_search_full', {'categorie' : categorie.slug, 'ville' : ville.villes }) }}"><input type="button" value="{{ ville.villes }}"></a>
         {% else %}
             <p>Pas d'annonces pour cette categorie</p>
         {% endfor %}
     {% endfor %}
+    {% if annonce is defined %}
     <h1>Liste des Annonce</h1>
     {% for annonce in annonce %}
         <div class="annonce">
@@ -41,4 +42,5 @@
             </div>
         </div>
     {% endfor %}
+    {% endif %}
 {% endblock body %}

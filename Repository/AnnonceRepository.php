@@ -50,7 +50,8 @@ class AnnonceRepository extends \Doctrine\ORM\EntityRepository
     {
         $qb = $this->createQueryBuilder('a');
 
-        $qb->addGroupBy('a.villes')
+         $qb->addGroupBy('a.categories')
+            ->addGroupBy('a.villes')
         ;
 
         return $qb

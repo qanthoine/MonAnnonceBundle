@@ -64,12 +64,11 @@ class ApiController extends Controller
                 return $this->redirect($this->generateUrl('mon_api_add'));
             }
             $em->persist($annonce);
-            {
+            var_dump($annonce);
                 foreach ($annonce->getImages() as $image)
                 {
                     $image->setAnnonce($annonce);
                 }
-            }
             $em->flush();
             $request->getSession()->getFlashBag()->add('message', $notice);
             return $this->redirectToRoute('mon_api_homepage');
@@ -112,7 +111,7 @@ class ApiController extends Controller
         $request->getSession()->getFlashBag()->add('message', 'Annonce supprimée !');
         return $this->redirectToRoute('mon_api_homepage');
     }
-    public function searchAction(Request $request, $categorie = null, $ville = null)
+    public function searchAction($categorie = null, $ville = null)
     {
         $em = $this->getDoctrine()->getManager();
         if(is_null($categorie)) // Categorie est null, j'affiche toutes les categories puis toutes les villes de chaque categorie
