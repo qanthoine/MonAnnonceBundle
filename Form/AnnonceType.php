@@ -23,7 +23,10 @@ class AnnonceType extends AbstractType
             ->add('titre', TextType::class)
             ->add('description', TextareaType::class)
             ->add('prix', TextType::class, array('required' => false))
-            ->add('villes', TextType::class)
+            ->add('villes', EntityType::class, array(
+                'class'        => 'MonApiBundle:Villes',
+                'choice_label' => 'codePostal',
+            ))
             ->add('categories', EntityType::class, array(
                 'class'        => 'MonApiBundle:Categories',
                 'choice_label' => 'name',

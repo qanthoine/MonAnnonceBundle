@@ -7,11 +7,18 @@
         </div>
     {% endfor %}
     <div class="new_categorie">
-        {{ form_start(form) }}
-        {{ form_label(form.name, "Nouvelle Categorie : ") }}
-        {{ form_errors(form.name) }}
-        {{ form_widget(form.name) }}
-        {{ form_end(form)}}
+        {{ form_start(form_categorie) }}
+        {{ form_label(form_categorie.name, "Nouvelle Categorie : ") }}
+        {{ form_errors(form_categorie.name) }}
+        {{ form_widget(form_categorie.name) }}
+        {{ form_end(form_categorie)}}
+    </div>
+    <div class="new_categorie">
+        {{ form_start(form_ville) }}
+        {{ form_label(form_ville.codePostal, "Nouvelle Ville : ") }}
+        {{ form_errors(form_ville.codePostal) }}
+        {{ form_widget(form_ville.codePostal) }}
+        {{ form_end(form_ville)}}
     </div>
     <h1>Liste des Annonce</h1>
     {% for annonce in annonce %}
@@ -26,7 +33,7 @@
                 {{ annonce.description }}
             </div>
             <div class="ville">
-                {{ annonce.villes }}
+                {{ annonce.villes.codePostal }}
             </div>
             <div class="prix">
                 {% if annonce.prix == null %}

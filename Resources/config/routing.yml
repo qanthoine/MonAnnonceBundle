@@ -22,10 +22,6 @@ mon_api_search_empty:
 mon_api_search_full:
     path:     /search/{categorie}/{ville}
     defaults: { _controller: MonApiBundle:Api:search }
-
-
-
-
 recuperation_annonce:
     path:     /api/get/annonce/{annonce}
     defaults: { _controller:MonApiBundle:ApiRest:getannonce }

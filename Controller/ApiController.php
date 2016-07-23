@@ -9,8 +9,10 @@ namespace MonApiBundle\Controller;
 
 use MonApiBundle\Entity\Annonce;
 use MonApiBundle\Entity\Categories;
+use MonApiBundle\Entity\Villes;
 use MonApiBundle\Form\AnnonceType;
 use MonApiBundle\Form\CategoriesType;
+use MonApiBundle\Form\VillesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -21,15 +23,32 @@ class ApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         $annonce = $em->getRepository('MonApiBundle:Annonce')->findAnnonce();
         $categorie = new Categories();
-        $form = $this->createForm(CategoriesType::class, $categorie);
-        $form->handleRequest($request);
-        if($form->isValid())
+        $form_categorie = $this->createForm(CategoriesType::class, $categorie);
+        $form_categorie->handleRequest($request);
+        $ville = new Villes();
+        $form_ville = $this->createForm(VillesType::class, $ville);
+        $form_ville->handleRequest($request);
+        if($form_categorie->isValid())
         {
             $em->persist($categorie);
             $em->flush();
+            $request->getSession()->getFlashBag()->add('message', "Categorie ajoutée !");
             return $this->redirectToRoute('mon_api_homepage');
         }
-        return $this->render('MonApiBundle:Api:index.html.twig', array('annonce' => $annonce, 'form' => $form->createView()));
+        if($form_ville->isValid())
+        {
+            $verif = $em->getRepository('MonApiBundle:VillesFrance')->findBy(array('villeCodePostal' => $ville->getCodePostal()));
+            if(!$verif)
+            {
+                $request->getSession()->getFlashBag()->add('message', "La ville n'existe pas !");
+                return $this->redirect($this->generateUrl('mon_api_homepage'));
+            }
+            $em->persist($ville);
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('message', "Ville ajoutée !");
+            return $this->redirectToRoute('mon_api_homepage');
+        }
+        return $this->render('MonApiBundle:Api:index.html.twig', array('annonce' => $annonce, 'form_categorie' => $form_categorie->createView(), 'form_ville' => $form_ville->createView()));
     }
     public function addAction(Request $request, $slug = null)
     {
@@ -57,12 +76,6 @@ class ApiController extends Controller
         if($form->isValid())
         {
             $em = $this->getDoctrine()->getManager();
-            $verif = $em->getRepository('MonApiBundle:VillesFrance')->findBy(array('villeCodePostal' => $annonce->getVilles()));
-            if(!$verif)
-            {
-                $request->getSession()->getFlashBag()->add('ville', "La ville n'existe pas !");
-                return $this->redirect($this->generateUrl('mon_api_add'));
-            }
             $em->persist($annonce);
                 foreach ($annonce->getImages() as $image)
                 {

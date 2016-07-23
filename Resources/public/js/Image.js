@@ -2,10 +2,7 @@
  * Created by david on 24/06/16 and corriged by JeanSeb.
  */
 $(document).ready(function(){
-    //By default, adding a button
-    addInsertImageButton();
-
-    $('#insert_image').click(function(event){
+     $('#insert_image').click(function(event){
         event.preventDefault();
         addImageField();
         return false;

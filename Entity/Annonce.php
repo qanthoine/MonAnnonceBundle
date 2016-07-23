@@ -67,9 +67,8 @@ class Annonce
     private $images;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="villes", type="string", length=255)
+     * @var int
+     * @ORM\ManyToOne(targetEntity="MonApiBundle\Entity\Villes", cascade={"persist"})
      */
     private $villes;
 
