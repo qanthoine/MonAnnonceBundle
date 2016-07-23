@@ -255,10 +255,11 @@ class Annonce
     {
         $this->images->removeElement($image);
     }
+
     /**
      * Get images
      *
-     * @return string
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getImages()
     {

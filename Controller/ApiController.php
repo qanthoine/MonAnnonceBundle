@@ -64,12 +64,12 @@ class ApiController extends Controller
                 return $this->redirect($this->generateUrl('mon_api_add'));
             }
             $em->persist($annonce);
-            var_dump($annonce);
                 foreach ($annonce->getImages() as $image)
                 {
                     $image->setAnnonce($annonce);
                 }
             $em->flush();
+            var_dump($annonce);
             $request->getSession()->getFlashBag()->add('message', $notice);
             return $this->redirectToRoute('mon_api_homepage');
         }
