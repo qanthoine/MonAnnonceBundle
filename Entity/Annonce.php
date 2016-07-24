@@ -4,6 +4,7 @@ namespace MonApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Annonce
@@ -31,7 +32,10 @@ class Annonce
 
     /**
      * @var string
-     *
+     * @Assert\Length(min = 5,
+     *                max = 60,
+     *                minMessage = "Le titre doit comporter au minimum {{ limit }} caractères",
+     *                maxMessage = "Le titre doit comporter au maximum {{ limit}} caractères")
      * @ORM\Column(name="titre", type="string", length=60, unique=true)
      */
     private $titre;
@@ -44,7 +48,10 @@ class Annonce
 
     /**
      * @var string
-     *
+     * @Assert\Length(min = 10,
+     *                max = 255,
+     *                minMessage = "La description doit comporter au minimum {{ limit }} caractères",
+     *                maxMessage = "La description doit comporter au maximum {{ limit}} caractères")
      * @ORM\Column(name="description", type="string", length=255)
      */
     private $description;

@@ -4,6 +4,7 @@ namespace MonApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Categories
@@ -24,7 +25,10 @@ class Categories
 
     /**
      * @var string
-     *
+     * @Assert\Length(min = 5,
+     *                max = 40,
+     *                minMessage = "La categorie doit comporter au minimum {{ limit }} caractères",
+     *                maxMessage = "La categorie doit comporter au maximum {{ limit }} caractères")
      * @ORM\Column(name="name", type="string", length=40, unique=true)
      */
     private $name;

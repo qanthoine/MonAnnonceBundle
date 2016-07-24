@@ -3,6 +3,7 @@
 namespace MonApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Villes
@@ -23,7 +24,8 @@ class Villes
 
     /**
      * @var int
-     *
+     * @Assert\Length(min = 5,
+     *                minMessage = "Le code postal doit comporter au minimum {{ limit }} chiffres")
      * @ORM\Column(name="code_postal", type="integer")
      */
     private $codePostal;
