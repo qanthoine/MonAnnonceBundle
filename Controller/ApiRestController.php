@@ -107,4 +107,81 @@ class ApiRestController extends Controller
             }
         }
     }
+    /**
+     * @Route("/api/get/annonce/")
+     * @Method("GET")
+     */
+    public function getannonceAction($annonce)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($annonce))
+        {
+            $response = new Response();
+            $response->setStatusCode(400);
+            return $response;
+        }
+        else
+        {
+            $recuperation = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('id' => $annonce));
+            $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $recuperation));
+            $test = array();
+            foreach ($images as $image)
+            {
+                array_push($test, 'http://127.0.0.1/api/web/app_dev.php/show/image/'.$image->getimage().'');
+            }
+            if(!$recuperation)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Cette annonce n'existe pas",
+                ]);
+            }
+            return new JsonResponse([
+                'success' => true,
+                'code' => "200",
+                'message' => "Annonce récupérée avec succès",
+                'id' => $recuperation->getid(),
+                'titre' => $recuperation->gettitre(),
+                'description' => $recuperation->getdescription(),
+                'prix' => $recuperation->getprix().'€',
+                'categorie' => $recuperation->getcategories()->getname(),
+                'ville' => $recuperation->getvilles()->getcodePostal(),
+                'images' => $test,
+            ]);
+        }
+    }
+    /**
+     * @Route("/api/delete/annonce/")
+     * @Method("DELETE")
+     */
+    public function deleteannonceAction($annonce)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($annonce))
+        {
+            $response = new Response();
+            $response->setStatusCode(400);
+            return $response;
+        }
+        else
+        {
+            $recuperation = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('id' => $annonce));
+            if(!$recuperation)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Cette annonce n'existe pas",
+                ]);
+            }
+            $em->remove($recuperation);
+            $em->flush();
+            return new JsonResponse([
+                'success' => true,
+                'code'    => "200",
+                'message' => "Annonce ($annonce) suprimée !",
+            ]);
+        }
+    }
 }

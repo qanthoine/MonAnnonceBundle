@@ -47,6 +47,6 @@ ajout_annonce_ville:
     defaults: { _controller:MonApiBundle:ApiRest:postville }
     methods:  [POST]
 delete_annonce:
-    path:     /api/delete/{annonce}
+    path:     /api/delete/annonce/{annonce}
     defaults: { _controller:MonApiBundle:ApiRest:deleteannonce }
     methods:  [DELETE]

@@ -21,16 +21,6 @@ class ApiController extends Controller
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findAll();
-        $verif_ville = $em->getRepository('MonApiBundle:Villes')->findAll();
-        if(!$verif_categorie || !$verif_ville)
-        {
-            $verif = false;
-        }
-        else
-        {
-            $verif = true;
-        }
         $annonce = $em->getRepository('MonApiBundle:Annonce')->findAnnonce();
         $categorie = new Categories();
         $form_categorie = $this->createForm(CategoriesType::class, $categorie);
@@ -58,52 +48,57 @@ class ApiController extends Controller
             $request->getSession()->getFlashBag()->add('message', "Ville ajoutée !");
             return $this->redirectToRoute('mon_api_homepage');
         }
-        return $this->render('MonApiBundle:Api:index.html.twig', array('annonce' => $annonce, 'form_categorie' => $form_categorie->createView(), 'form_ville' => $form_ville->createView(), 'verif' => $verif));
+        return $this->render('MonApiBundle:Api:index.html.twig', array('annonce' => $annonce, 'form_categorie' => $form_categorie->createView(), 'form_ville' => $form_ville->createView()));
     }
     public function addAction(Request $request, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
         $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findAll();
         $verif_ville = $em->getRepository('MonApiBundle:Villes')->findAll();
-        if(!$verif_categorie || !$verif_ville)
+        if(!$verif_categorie)
         {
-            $request->getSession()->getFlashBag()->add('message', "Merci de créer une categorie et une ville !");
+            $request->getSession()->getFlashBag()->add('message', "Merci de créer une categorie !");
             return $this->redirect($this->generateUrl('mon_api_homepage'));
         }
-            if (is_null($slug)) {
-                $annonce = new Annonce();
-                $notice = "Annonce créee";
-                $page_title ="Nouvelle Annonce";
-                $form = $this->createForm(AnnonceType::class, $annonce);
-                $form->handleRequest($request);
-            }
-            else{
-                $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('slug' => $slug));
-                if(!$annonce)
-                {
-                    $request->getSession()->getFlashBag()->add('message', "L'annonce n'existe pas !");
-                    return $this->redirect($this->generateUrl('mon_api_add'));
-                }
-                $notice = "Annonce modifiée";
-                $page_title ="Edition de l'Annonce";
-                $form = $this->createForm(AnnonceType::class, $annonce);
-                $form->remove('images');
-                $form->handleRequest($request);
-            }
-            if($form->isValid())
+        if(!$verif_ville)
+        {
+            $request->getSession()->getFlashBag()->add('message', "Merci de créer une ville !");
+            return $this->redirect($this->generateUrl('mon_api_homepage'));
+        }
+        if (is_null($slug)) {
+            $annonce = new Annonce();
+            $notice = "Annonce créee";
+            $page_title ="Nouvelle Annonce";
+            $form = $this->createForm(AnnonceType::class, $annonce);
+            $form->handleRequest($request);
+        }
+        else
+        {
+            $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('slug' => $slug));
+            if(!$annonce)
             {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($annonce);
-                    foreach ($annonce->getImages() as $image)
-                    {
-                        $image->setAnnonce($annonce);
-                    }
-                $em->flush();
-                var_dump($annonce);
-                $request->getSession()->getFlashBag()->add('message', $notice);
-                return $this->redirectToRoute('mon_api_homepage');
+                $request->getSession()->getFlashBag()->add('message', "L'annonce n'existe pas !");
+                return $this->redirect($this->generateUrl('mon_api_add'));
             }
-            return $this->render('MonApiBundle:Api:add.html.twig', array('form' => $form->createView(), 'titre' => $page_title, 'info' => $annonce));
+            $notice = "Annonce modifiée";
+            $page_title ="Edition de l'Annonce";
+            $form = $this->createForm(AnnonceType::class, $annonce);
+            $form->remove('images');
+            $form->handleRequest($request);
+        }
+        if($form->isValid())
+        {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($annonce);
+            foreach ($annonce->getImages() as $image)
+            {
+                $image->setAnnonce($annonce);
+            }
+            $em->flush();
+            $request->getSession()->getFlashBag()->add('message', $notice);
+            return $this->redirectToRoute('mon_api_homepage');
+        }
+        return $this->render('MonApiBundle:Api:add.html.twig', array('form' => $form->createView(), 'titre' => $page_title, 'info' => $annonce));
     }
     public function showAction(Request $request, $slug)
     {
