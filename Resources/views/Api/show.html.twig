@@ -12,7 +12,7 @@
                 {{ annonce.description }}
             </div>
             <div class="ville">
-                {{ annonce.villes }}
+                {{ annonce.villes.codePostal }}
             </div>
             <div class="prix">
                 {% if annonce.prix == null %}
@@ -24,12 +24,14 @@
             <div class="date">
                 Ecrite le : {{ annonce.date|date("d/m/Y") }}
             </div>
-            {% for image in annonce.images %}
-                {% if image.image != null %}
-                    <a href="{{ path('mon_api_image', {'image' : image.image}) }}" target="_blank"><img src="{{ asset('uploads/' ~ image.image) }}" height="200px" width="200px" alt="{{ image.image }}"/></a>
-                {% else %}
-                    <img src="{{ asset('bundles/monapi/css/no_apercu.jpg')}}" alt="Aucun aperçu n'est disponible"/>
-                {% endif %}
-            {% endfor %}
         </div>
+    <div class="images_show">
+        {% for image in annonce.images %}
+            {% if image.image != null %}
+                <a href="{{ path('mon_api_image', {'image' : image.image}) }}" target="_blank"><img src="{{ asset('uploads/' ~ image.image) }}" height="200px" width="200px" alt="{{ image.image }}"/></a>
+            {% else %}
+                <img src="{{ asset('bundles/monapi/css/no_apercu.jpg')}}" alt="Aucun aperçu n'est disponible"/>
+            {% endif %}
+        {% endfor %}
+    </div>
 {% endblock body %}

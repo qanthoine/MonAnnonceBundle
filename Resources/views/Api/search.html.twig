@@ -1,13 +1,18 @@
 {% extends "MonApiBundle::layout.html.twig" %}
 {% block title %}Recherche{% endblock title %}
 {% block body %}
+    <h1>Recherche - Liste des categories</h1>
     {% for categorie in categorie %}
-        <p>{{ categorie.name }}</p>
-        {% for ville in ville if categorie == ville.categories %}
-            <a href="{{ path('mon_api_search_full', {'categorie' : categorie.slug, 'ville' : ville.villes }) }}"><input type="button" value="{{ ville.villes }}"></a>
-        {% else %}
-            <p>Pas d'annonces pour cette categorie</p>
-        {% endfor %}
+        <div class="search">
+            <div class="search_categorie">
+                {{ categorie.name }}
+            </div>
+            {% for ville in ville if categorie == ville.categories %}
+                <div class="search_ville"><a href="{{ path('mon_api_search_full', {'categorie' : categorie.slug, 'ville' : ville.villes.codePostal }) }}"><input type="button" value="{{ ville.villes.codePostal }}"></a></div>
+            {% else %}
+                <p>Pas d'annonces pour cette categorie</p>
+            {% endfor %}
+        </div>
     {% endfor %}
     {% if annonce is defined %}
     <h1>Liste des Annonce</h1>
@@ -23,7 +28,7 @@
                 {{ annonce.description }}
             </div>
             <div class="ville">
-                {{ annonce.villes }}
+                {{ annonce.villes.codePostal }}
             </div>
             <div class="prix">
                 {% if annonce.prix == null %}

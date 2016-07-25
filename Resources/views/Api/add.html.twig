@@ -49,6 +49,7 @@
                 {{ form_label(form.images, "Images : ") }}
             </div>
             <a href="#" id="insert_image"><input type="button" value="Ajouter une image"></a>
+            {{ form_errors(form.images) }}
             {{ form_widget(form.images) }}
         {% endif %}
         {{ form_end(form)}}

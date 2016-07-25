@@ -47,7 +47,7 @@ function addImageField(){
         return;
     }
 
-    var template = emplacement.attr('data-prototype').replace(/__name__label__/g, 'Image n°'+(index+1)).replace(/__name__/g, index).replace('<div>', '<div class="jumbotron">');
+    var template = emplacement.attr('data-prototype').replace(/__name__label__/g, '').replace(/__name__/g, index);
 
     var prototype = $(template);
     addDeleteLink(prototype);
