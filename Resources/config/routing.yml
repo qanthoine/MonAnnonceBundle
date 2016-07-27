@@ -27,12 +27,12 @@ recuperation_annonce:
     defaults: { _controller:MonApiBundle:ApiRest:getannonce }
     methods:  [GET]
 recuperation_annonce_ville:
-    path:     /api/get/ville/{ville}
-    defaults: { _controller:MonApiBundle:ApiRest:getville }
+    path:     /api/get/annonce/ville/{ville}/{page}
+    defaults: { _controller:MonApiBundle:ApiRest:getannonceville, page: 1  }
     methods:  [GET]
 recuperation_annonce_categorie:
-    path:     /api/get/categorie/{categorie}
-    defaults: { _controller:MonApiBundle:ApiRest:getcategorie }
+    path:     /api/get/annonce/categorie/{categorie}/{page}
+    defaults: { _controller:MonApiBundle:ApiRest:getannoncecategorie, page: 1  }
     methods:  [GET]
 recuperation_annonce_categorie_ville:
     path:     /api/get/categorie/{categorie}/ville/{ville}
