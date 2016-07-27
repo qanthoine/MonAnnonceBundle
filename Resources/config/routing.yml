@@ -35,8 +35,8 @@ recuperation_annonce_categorie:
     defaults: { _controller:MonApiBundle:ApiRest:getannoncecategorie, page: 1  }
     methods:  [GET]
 recuperation_annonce_categorie_ville:
-    path:     /api/get/categorie/{categorie}/ville/{ville}
-    defaults: { _controller:MonApiBundle:ApiRest:getcateville }
+    path:     /api/get/annonce/categorie/{categorie}/ville/{ville}/{page}
+    defaults: { _controller:MonApiBundle:ApiRest:getcateville, page: 1  }
     methods:  [GET]
 ajout_annonce_categorie:
     path:     /api/add/categorie/{categorie}

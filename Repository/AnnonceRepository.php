@@ -83,6 +83,20 @@ class AnnonceRepository extends \Doctrine\ORM\EntityRepository
             ->getSingleScalarResult()
             ;
     }
+    public function countcategorieville($recup_ville, $recup_categorie)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->select('COUNT(a)')
+            ->where('a.villes = :id_villes')
+            ->andwhere('a.categories = :id_categories')
+            ->setParameter('id_villes', $recup_ville)
+            ->setParameter('id_categories', $recup_categorie)
+        ;
+        return $qb
+            ->getQuery()
+            ->getSingleScalarResult()
+            ;
+    }
     public function annoncepage($recup_categorie, $nb_annonce_page, $first_page)
     {
         $qb = $this->createQueryBuilder('a');
@@ -103,6 +117,23 @@ class AnnonceRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->where('a.villes = :id_ville')
             ->setParameter('id_ville', $recup_ville)
+            ->orderBy('a.id', 'ASC')
+            ->setFirstResult($first_page)
+            ->setMaxResults($nb_annonce_page)
+        ;
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+    public function pagecategorieville($recup_ville, $recup_categorie, $nb_annonce_page, $first_page)
+    {
+        $qb = $this->createQueryBuilder('a');
+        $qb->where('a.villes = :id_ville')
+            ->andwhere('a.categories = :id_categorie')
+            ->setParameter('id_ville', $recup_ville)
+            ->setParameter('id_categorie', $recup_categorie)
             ->orderBy('a.id', 'ASC')
             ->setFirstResult($first_page)
             ->setMaxResults($nb_annonce_page)

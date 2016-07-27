@@ -435,4 +435,125 @@ class ApiRestController extends Controller
             }
         }
     }
+
+    /**
+     * @Route("/api/get/annonce/categorie/{categorie}/ville/{ville}/{page}", defaults={"page" = 1})
+     * @Method("GET")
+     */
+    public function getcatevilleAction($categorie, $ville, $page = 1) // Utilise Ville Code Postal et Categorie SLUG et Page (page 1 par defaut)
+    {
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($categorie) || is_null($ville))
+        {
+            $response = new Response();
+            $response->setStatusCode(400);
+            return $response;
+        }
+        else
+        {
+            $recup_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('codePostal' => $ville));
+            $recup_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('slug' => $categorie));
+            var_dump($recup_categorie);
+            if(!$recup_ville || !$recup_categorie)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Cette categorie ou ville n'existe pas",
+                ]);
+            }
+            $nb_annonce_page = 10;
+            $count = $em->getRepository('MonApiBundle:Annonce')->countcategorieville($recup_ville, $recup_categorie);
+            $nb_total_page = ceil($count/$nb_annonce_page);
+            if($nb_total_page == 1)
+            {
+                $all_annonce = array();
+                $annonce = $em->getRepository('MonApiBundle:Annonce')->findBy(array('villes' => $recup_ville, 'categories' => $recup_categorie) ,array('id' => 'asc'));
+                foreach ($annonce as $annonceNew)
+                {
+                    if($annonceNew->getprix() == null)
+                    {
+                        $prix = 0;
+                    }
+                    else
+                    {
+                        $prix = $annonceNew->getprix();
+                    }
+                    $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                    if(!$images)
+                    {
+                        $image_recup = "Aucune Image";
+                    }
+                    else
+                    {
+                        $image_recup = array();
+                        foreach ($images as $image)
+                        {
+                            array_push($image_recup, 'http://127.0.0.1/api/web/app_dev.php/show/image/'.$image->getimage().'');
+                        }
+                    }
+                    $transforme_annonce = array('Annonce n°' => $annonceNew->getid(), 'Titre' => $annonceNew->gettitre(), 'Description' => $annonceNew->getdescription(), 'Prix' => $prix.'€', 'Categorie' => $annonceNew->getCategories()->getname(), 'Ville' => $annonceNew->getVilles()->getcodePostal(), 'Image' => $image_recup);
+                    array_push($all_annonce, $transforme_annonce);
+                }
+                return new JsonResponse([
+                    'success' => true,
+                    'code' => "200",
+                    'message' => "Affichage de $count annonce(s) pour la ville : $ville et categorie $categorie",
+                    'Annonces :' => $all_annonce,
+                ]);
+            }
+            else
+            {
+                if($page > 0 & $page <= $nb_total_page)
+                {
+                    $first_page = (($page-1)*$nb_annonce_page);
+                    $all_annonce = array();
+                    $annonce = $em->getRepository('MonApiBundle:Annonce')->pagecategorieville($recup_ville, $recup_categorie, $nb_annonce_page, $first_page);
+                    foreach ($annonce as $annonceNew)
+                    {
+                        if($annonceNew->getprix() == null)
+                        {
+                            $prix = 0;
+                        }
+                        else
+                        {
+                            $prix = $annonceNew->getprix();
+                        }
+                        $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                        if(!$images)
+                        {
+                            $image_recup = "Aucune Image";
+                        }
+                        else
+                        {
+                            $image_recup = array();
+                            foreach ($images as $image)
+                            {
+                                array_push($image_recup, 'http://127.0.0.1/api/web/app_dev.php/show/image/'.$image->getimage().'');
+                            }
+                        }
+                        $transforme_annonce = array('Annonce n°' => $annonceNew->getid(), 'Titre' => $annonceNew->gettitre(), 'Description' => $annonceNew->getdescription(), 'Prix' => $prix.'€', 'Categorie' => $annonceNew->getCategories()->getname(), 'Ville' => $annonceNew->getVilles()->getcodePostal(), 'Image' => $image_recup);
+                        array_push($all_annonce, $transforme_annonce);
+                    }
+                    return new JsonResponse([
+                        'success' => true,
+                        'code' => "200",
+                        'message' => "Affichage de(s) annonce(s) pour la ville : $ville et categorie : $categorie",
+                        'Annonces :' => $all_annonce,
+                        'info' => "Page $page sur $nb_total_page affichées ($count annonces en tout)"
+                    ]);
+                }
+                else
+                {
+                    return new JsonResponse([
+                        'success' => false,
+                        'code'    => "409",
+                        'message' => "Verifier les parametres",
+                        'info'    => "Erreur de la page"
+                    ]);
+                }
+            }
+        }
+
+    }
 }
