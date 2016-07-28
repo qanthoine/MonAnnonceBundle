@@ -54,3 +54,7 @@ ajout_annonce:
     path:     /api/add/annonce
     defaults: { _controller:MonApiBundle:ApiRest:postannonce }
     methods:  [POST]
+modif_annonce:
+    path:     /api/edit/annonce/{id}
+    defaults: { _controller:MonApiBundle:ApiRest:postannonceedit }
+    methods:  [POST]

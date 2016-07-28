@@ -683,4 +683,135 @@ class ApiRestController extends Controller
             ]);
         }
     }
+
+    /**
+     * @Route("/api/edit/annonce/{id]")
+     * @Method("POST")
+     */
+    public function postannonceeditAction($id, Request $request) // Utilise Annonce ID
+    {
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($id))
+        {
+            $response = new Response();
+            $response->setStatusCode(400);
+            return $response;
+        }
+        $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('id' => $id));
+        if(!$annonce)
+        {
+            return new JsonResponse([
+                'success' => false,
+                'code'    => "409",
+                'message' => "L'annonce n'existe pas",
+            ]);
+        }
+        if(!is_null($request->query->get('titre')))
+        {
+            if(strlen($request->query->get('titre')) > 5 & strlen($request->query->get('titre')) < 60 & is_string($request->query->get('titre')))
+            {
+                $titre = $request->query->get('titre');
+            }
+            else
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Erreur de paramètre",
+                    'info'    => "Erreur au niveau de Titre"
+                ]);
+            }
+        }
+        else
+        {
+            $titre = $annonce->gettitre();
+        }
+        if(!is_null($request->query->get('description')))
+        {
+            if(strlen($request->query->get('description')) > 10 & strlen($request->query->get('description')) < 255 & is_string($request->query->get('description')))
+            {
+                $description = $request->query->get('description');
+            }
+            else
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Erreur de paramètre",
+                    'info'    => "Erreur au niveau de Description"
+                ]);
+            }
+        }
+        else
+        {
+            $description = $annonce->getdescription();
+        }
+        if(!is_null($request->query->get('categorie')) & is_numeric($request->query->get('categorie')))
+        {
+            $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('id' => $request->query->get('categorie')));
+            if(!$verif_categorie)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "La categorie n'existe pas",
+                ]);
+            }
+            $categorie = $verif_categorie;
+        }
+        else
+        {
+            $categorie = $annonce->getCategories();
+        }
+        if(!is_null($request->query->get('ville')) & is_numeric($request->query->get('ville')))
+        {
+            $verif_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('id' => $request->query->get('ville')));
+            if(!$verif_ville)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "La ville n'existe pas",
+                ]);
+            }
+            $ville = $verif_ville;
+        }
+        else
+        {
+            $ville = $annonce->getVilles();
+        }
+        if(!is_null($request->query->get('prix')))
+        {
+            if($request->query->get('prix') >= 0 & is_numeric($request->query->get('prix')))
+            {
+                $prix = $request->query->get('prix');
+            }
+            else
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Erreur de paramètre",
+                    'info'    => "Erreur au niveau de Prix"
+                ]);
+            }
+        }
+        else
+        {
+            $prix = $annonce->getprix();
+        }
+        $annonce->setTitre($titre);
+        $annonce->setDescription($description);
+        $annonce->setCategories($categorie);
+        $annonce->setVilles($ville);
+        $annonce->setPrix($prix);
+        $em->persist($annonce);
+        $em->flush();
+        return new JsonResponse([
+            'success' => true,
+            'code' => "200",
+            'message' => "Annonce modifiée avec succès",
+            'info' => 'Annonce n°'.$annonce->getId()
+        ]);
+    }
 }
