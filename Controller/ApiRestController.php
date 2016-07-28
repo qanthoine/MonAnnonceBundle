@@ -567,7 +567,7 @@ class ApiRestController extends Controller
     public function postannonceAction(Request $request) // Requiert les paramètres obligatoire (Titre / Description / Categorie (ID) / Ville (ID))
     {
         $em = $this->getDoctrine()->getManager();
-        if(is_null($request->query->get('titre')) || strlen($request->query->get('titre')) < 5 || strlen($request->query->get('titre')) > 60 || !is_string($request->query->get('titre')))
+        if(is_null($request->query->get('titre')) || strlen($request->query->get('titre')) <= 5 || strlen($request->query->get('titre')) >= 60 || !is_string($request->query->get('titre')))
         {
             return new JsonResponse([
                 'success' => false,
@@ -576,7 +576,19 @@ class ApiRestController extends Controller
                 'info'    => "Erreur au niveau de Titre"
             ]);
         }
-        if(is_null($request->query->get('description')) || strlen($request->query->get('description')) < 10 || strlen($request->query->get('description')) > 255 || !is_string($request->query->get('description')))
+        else
+        {
+            $verif_titre = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('titre' => $request->query->get('titre')));
+            if($verif_titre)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Le titre existe déjà",
+                ]);
+            }
+        }
+        if(is_null($request->query->get('description')) || strlen($request->query->get('description')) <= 10 || strlen($request->query->get('description')) >= 255 || !is_string($request->query->get('description')))
         {
             return new JsonResponse([
                 'success' => false,
@@ -708,9 +720,21 @@ class ApiRestController extends Controller
         }
         if(!is_null($request->query->get('titre')))
         {
-            if(strlen($request->query->get('titre')) > 5 & strlen($request->query->get('titre')) < 60 & is_string($request->query->get('titre')))
+            if(strlen($request->query->get('titre')) >= 5 & strlen($request->query->get('titre')) <= 60 & is_string($request->query->get('titre')))
             {
-                $titre = $request->query->get('titre');
+                $verif_titre = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('titre' => $request->query->get('titre')));
+                if($verif_titre)
+                {
+                    return new JsonResponse([
+                        'success' => false,
+                        'code'    => "409",
+                        'message' => "Le titre existe déjà",
+                    ]);
+                }
+                else
+                {
+                    $titre = $request->query->get('titre');
+                }
             }
             else
             {
@@ -728,7 +752,7 @@ class ApiRestController extends Controller
         }
         if(!is_null($request->query->get('description')))
         {
-            if(strlen($request->query->get('description')) > 10 & strlen($request->query->get('description')) < 255 & is_string($request->query->get('description')))
+            if(strlen($request->query->get('description')) >= 10 & strlen($request->query->get('description')) <= 255 & is_string($request->query->get('description')))
             {
                 $description = $request->query->get('description');
             }

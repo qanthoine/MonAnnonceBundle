@@ -5,12 +5,18 @@ namespace MonApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Annonce
  *
  * @ORM\Table(name="annonce")
  * @ORM\Entity(repositoryClass="MonApiBundle\Repository\AnnonceRepository")
+ * @UniqueEntity(
+ *     fields={"titre"},
+ *     errorPath="titre",
+ *     message="Le titre est déjà utilisé. Merci d'en choisir un autre"
+ * )
  */
 class Annonce
 {
@@ -36,6 +42,7 @@ class Annonce
      *                max = 60,
      *                minMessage = "Le titre doit comporter au minimum {{ limit }} caractères",
      *                maxMessage = "Le titre doit comporter au maximum {{ limit}} caractères")
+     * @Assert\NotBlank(message = "Le Champs de doit pas être vide")
      * @ORM\Column(name="titre", type="string", length=60, unique=true)
      */
     private $titre;
@@ -52,6 +59,7 @@ class Annonce
      *                max = 255,
      *                minMessage = "La description doit comporter au minimum {{ limit }} caractères",
      *                maxMessage = "La description doit comporter au maximum {{ limit}} caractères")
+     * @Assert\NotBlank(message = "Le Champs de doit pas être vide")
      * @ORM\Column(name="description", type="string", length=255)
      */
     private $description;

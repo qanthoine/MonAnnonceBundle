@@ -5,12 +5,18 @@ namespace MonApiBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Categories
  *
  * @ORM\Table(name="categories")
  * @ORM\Entity(repositoryClass="MonApiBundle\Repository\CategoriesRepository")
+ * @UniqueEntity(
+ *     fields={"titre"},
+ *     errorPath="titre",
+ *     message="Le nom est déjà utilisé. Merci d'en choisir un autre"
+ * )
  */
 class Categories
 {
@@ -29,6 +35,7 @@ class Categories
      *                max = 40,
      *                minMessage = "La categorie doit comporter au minimum {{ limit }} caractères",
      *                maxMessage = "La categorie doit comporter au maximum {{ limit }} caractères")
+     * @Assert\NotBlank(message = "Le Champs de doit pas être vide")
      * @ORM\Column(name="name", type="string", length=40, unique=true)
      */
     private $name;

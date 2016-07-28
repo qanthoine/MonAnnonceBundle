@@ -4,12 +4,18 @@ namespace MonApiBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Villes
  *
  * @ORM\Table(name="villes")
  * @ORM\Entity(repositoryClass="MonApiBundle\Repository\VillesRepository")
+ * @UniqueEntity(
+ *     fields={"titre"},
+ *     errorPath="titre",
+ *     message="Le code postal est déjà utilisé. Merci d'en choisir un autre"
+ * )
  */
 class Villes
 {
@@ -26,7 +32,8 @@ class Villes
      * @var int
      * @Assert\Length(min = 5,
      *                minMessage = "Le code postal doit comporter au minimum {{ limit }} chiffres")
-     * @ORM\Column(name="code_postal", type="integer")
+     * @Assert\NotBlank(message = "Le Champs de doit pas être vide")
+     * @ORM\Column(name="code_postal", type="integer", unique=true)
      */
     private $codePostal;
 
