@@ -8,6 +8,8 @@
 namespace MonApiBundle\Controller;
 
 
+use MonApiBundle\Entity\Annonce;
+use Proxies\__CG__\MonApiBundle\Entity\Images;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use MonApiBundle\Entity\Categories;
@@ -15,6 +17,7 @@ use MonApiBundle\Entity\Villes;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 
 class ApiRestController extends Controller
 {
@@ -555,5 +558,129 @@ class ApiRestController extends Controller
             }
         }
 
+    }
+
+    /**
+     * @Route("/api/add/annonce")
+     * @Method("POST")
+     */
+    public function postannonceAction(Request $request) // Requiert les paramètres obligatoire (Titre / Description / Categorie (ID) / Ville (ID))
+    {
+        $em = $this->getDoctrine()->getManager();
+        if(is_null($request->query->get('titre')) || strlen($request->query->get('titre')) < 5 || strlen($request->query->get('titre')) > 60 || !is_string($request->query->get('titre')))
+        {
+            return new JsonResponse([
+                'success' => false,
+                'code'    => "409",
+                'message' => "Erreur de paramètre",
+                'info'    => "Erreur au niveau de Titre"
+            ]);
+        }
+        if(is_null($request->query->get('description')) || strlen($request->query->get('description')) < 10 || strlen($request->query->get('description')) > 255 || !is_string($request->query->get('description')))
+        {
+            return new JsonResponse([
+                'success' => false,
+                'code'    => "409",
+                'message' => "Erreur de paramètre",
+                'info'    => "Erreur au niveau de Description"
+            ]);
+        }
+        if(is_null($request->query->get('categorie')) || !is_numeric($request->query->get('categorie')))
+        {
+            return new JsonResponse([
+                'success' => false,
+                'code'    => "409",
+                'message' => "Erreur de paramètre",
+                'info'    => "Erreur au niveau de Categorie"
+            ]);
+        }
+        else
+        {
+            $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('id' => $request->query->get('categorie')));
+            if(!$verif_categorie)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "La categorie n'existe pas"
+                ]);
+            }
+            else
+            {
+                $categorie = $verif_categorie;
+            }
+        }
+        if(is_null($request->query->get('ville')) || !is_numeric($request->query->get('ville')))
+        {
+            return new JsonResponse([
+                'success' => false,
+                'code'    => "409",
+                'message' => "Erreur de paramètre",
+                'info'    => "Erreur au niveau de Ville"
+            ]);
+        }
+        else
+        {
+            $verif_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('id' => $request->query->get('ville')));
+            if(!$verif_ville)
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "La ville n'existe pas"
+                ]);
+            }
+            else
+            {
+                $ville = $verif_ville;
+            }
+        }
+        if(is_null($request->query->get('prix')) || ($request->query->get('prix') >= 0 & is_numeric($request->query->get('prix'))))
+        {
+            $prix = $request->query->get('prix');
+        }
+        else
+        {
+            return new JsonResponse([
+                'success' => false,
+                'code'    => "409",
+                'message' => "Erreur de paramètre",
+                'info'    => "Erreur au niveau de Prix"
+            ]);
+        }
+        $annonce = new Annonce();
+        $annonce->setTitre($request->query->get('titre'));
+        $annonce->setDescription($request->query->get('description'));
+        $annonce->setCategories($categorie);
+        $annonce->setVilles($ville);
+        $annonce->setPrix($prix);
+        $req_image = $request->files->all();
+        $em->persist($annonce);
+        $em->flush();
+        foreach ($req_image as $images)
+        {
+            if(!$images->guessExtension() == ('jpg' || 'jpeg' || 'jpe' || 'bmp' || 'wbmp' || 'dib' || 'png'))
+            {
+                return new JsonResponse([
+                    'success' => false,
+                    'code'    => "409",
+                    'message' => "Erreur de paramètre",
+                    'info'    => "Mauvais format de l'image"
+                ]);
+            }
+            $image = new Images();
+            $image->setImage(uniqid().'.'.$images->guessExtension());
+            $annonce->addImage($image);
+            $images->move('../web/uploads/', $image->getImage());
+            $image->setAnnonce($annonce);
+            $em->persist($image);
+            $em->flush();
+            return new JsonResponse([
+                'success' => true,
+                'code' => "200",
+                'message' => "Annonce ajoutée avec succès",
+                'info' => 'Annonce n°'.$annonce->getId()
+            ]);
+        }
     }
 }

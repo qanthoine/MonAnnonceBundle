@@ -50,3 +50,7 @@ delete_annonce:
     path:     /api/delete/annonce/{annonce}
     defaults: { _controller:MonApiBundle:ApiRest:deleteannonce }
     methods:  [DELETE]
+ajout_annonce:
+    path:     /api/add/annonce
+    defaults: { _controller:MonApiBundle:ApiRest:postannonce }
+    methods:  [POST]
