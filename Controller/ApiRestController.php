@@ -667,33 +667,41 @@ class ApiRestController extends Controller
         $annonce->setVilles($ville);
         $annonce->setPrix($prix);
         $req_image = $request->files->all();
-        $em->persist($annonce);
-        $em->flush();
-        foreach ($req_image as $images)
+        if(!$req_image)
         {
-            if(!$images->guessExtension() == ('jpg' || 'jpeg' || 'jpe' || 'bmp' || 'wbmp' || 'dib' || 'png'))
+            $em->persist($annonce);
+            $em->flush();
+            foreach ($req_image as $images)
             {
+                if (!$images->guessExtension() == ('jpg' || 'jpeg' || 'jpe' || 'bmp' || 'wbmp' || 'dib' || 'png')) {
+                    return new JsonResponse([
+                        'success' => false,
+                        'code' => "409",
+                        'message' => "Erreur de paramètre",
+                        'info' => "Mauvais format de l'image"
+                    ]);
+                }
+                $image = new Images();
+                $image->setImage(uniqid() . '.' . $images->guessExtension());
+                $annonce->addImage($image);
+                $images->move('../web/uploads/', $image->getImage());
+                $image->setAnnonce($annonce);
+                $em->persist($image);
+                $em->flush();
                 return new JsonResponse([
-                    'success' => false,
-                    'code'    => "409",
-                    'message' => "Erreur de paramètre",
-                    'info'    => "Mauvais format de l'image"
+                    'success' => true,
+                    'code' => "200",
+                    'message' => "Annonce ajoutée avec succès",
+                    'info' => 'Annonce n°' . $annonce->getId()
                 ]);
             }
-            $image = new Images();
-            $image->setImage(uniqid().'.'.$images->guessExtension());
-            $annonce->addImage($image);
-            $images->move('../web/uploads/', $image->getImage());
-            $image->setAnnonce($annonce);
-            $em->persist($image);
-            $em->flush();
-            return new JsonResponse([
-                'success' => true,
-                'code' => "200",
-                'message' => "Annonce ajoutée avec succès",
-                'info' => 'Annonce n°'.$annonce->getId()
-            ]);
         }
+        return new JsonResponse([
+            'success' => true,
+            'code' => "200",
+            'message' => "Annonce ajoutée avec succès",
+            'info' => 'Annonce n°' . $annonce->getId()
+        ]);
     }
 
     /**
