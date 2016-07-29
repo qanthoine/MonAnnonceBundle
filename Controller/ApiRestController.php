@@ -456,7 +456,6 @@ class ApiRestController extends Controller
         {
             $recup_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('codePostal' => $ville));
             $recup_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('slug' => $categorie));
-            var_dump($recup_categorie);
             if(!$recup_ville || !$recup_categorie)
             {
                 return new JsonResponse([
