@@ -23,5 +23,9 @@ Installer les bases de données.<br>
 <pre><code>php bin/console dotrine:schema:update --force</code></pre>
 Ouvrir le dossier SQL et injecter les données (SQL/ville_france).<br>
 Installer les assets.<br>
-<pre><code>php bin/console asset:install --symlink</code><pre>
+<pre><code>php bin/console asset:install --symlink</code></pre>
+# Utilisation de l'API :
+
+- Vous pouvez visiter le <a href="https://github.com/qanthoine/MonApiBundle/wiki">Wiki.</a><br>
+- Ouvrir le fichier PDF dans le bundle<br>
 
