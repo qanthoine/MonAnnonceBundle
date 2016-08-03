@@ -9,14 +9,14 @@
 -Editer les lignes :<br>
 <pre><code>
 (app/AppKernel.php)
-    new MonApiBundle\MonApiBundle(),
+    new MonAnnonceBundle\MonAnnonceBundle(),
     
 (app/config/config.yml)
-    - { resource: "@MonApiBundle/Resources/config/services.yml" }
+    - { resource: "@MonAnnonceBundle/Resources/config/services.yml" }
     
 (app/config/routing.yml)
     mon_api:
-        resource: "@MonApiBundle/Resources/config/routing.yml"
+        resource: "@MonAnnonceBundle/Resources/config/routing.yml"
         prefix:   /
 </code></pre>
 Installer les bases de données.<br>
@@ -26,6 +26,6 @@ Installer les assets.<br>
 <pre><code>php bin/console asset:install --symlink</code></pre>
 # Utilisation de l'API :
 
-- Vous pouvez visiter le <a href="https://github.com/qanthoine/MonApiBundle/wiki">Wiki.</a><br>
+- Vous pouvez visiter le <a href="https://github.com/qanthoine/MonAnnonceBundle/wiki">Wiki.</a><br>
 - Ouvrir le fichier PDF dans le bundle<br>
 
