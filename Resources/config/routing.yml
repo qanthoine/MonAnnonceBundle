@@ -1,60 +1,60 @@
 mon_api_homepage:
     path:     /
-    defaults: { _controller: MonApiBundle:Api:index }
+    defaults: { _controller: MonAnnonceBundle:Site:index }
 mon_api_add:
     path:     /add
-    defaults: { _controller: MonApiBundle:Api:add }
+    defaults: { _controller: MonAnnonceBundle:Site:add }
 mon_api_edit:
     path:     /edit/{slug}
-    defaults: { _controller: MonApiBundle:Api:add }
+    defaults: { _controller: MonAnnonceBundle:Site:add }
 mon_api_delete:
     path:     /delete/{slug}
-    defaults: { _controller: MonApiBundle:Api:delete }
+    defaults: { _controller: MonAnnonceBundle:Site:delete }
 mon_api_show:
     path:     /show/{slug}
-    defaults: { _controller: MonApiBundle:Api:show }
+    defaults: { _controller: MonAnnonceBundle:Site:show }
 mon_api_image:
     path:     /show/image/{image}
-    defaults: { _controller: MonApiBundle:Api:showimage }
+    defaults: { _controller: MonAnnonceBundle:Site:showimage }
 mon_api_search_empty:
     path:     /search/
-    defaults: { _controller: MonApiBundle:Api:search }
+    defaults: { _controller: MonAnnonceBundle:Site:search }
 mon_api_search_full:
     path:     /search/{categorie}/{ville}
-    defaults: { _controller: MonApiBundle:Api:search }
+    defaults: { _controller: MonAnnonceBundle:Site:search }
 recuperation_annonce:
     path:     /api/get/annonce/{annonce}
-    defaults: { _controller:MonApiBundle:ApiRest:getannonce }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:getannonce }
     methods:  [GET]
 recuperation_annonce_ville:
     path:     /api/get/annonce/ville/{ville}/{page}
-    defaults: { _controller:MonApiBundle:ApiRest:getannonceville, page: 1  }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:getannonceville, page: 1  }
     methods:  [GET]
 recuperation_annonce_categorie:
     path:     /api/get/annonce/categorie/{categorie}/{page}
-    defaults: { _controller:MonApiBundle:ApiRest:getannoncecategorie, page: 1  }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:getannoncecategorie, page: 1  }
     methods:  [GET]
 recuperation_annonce_categorie_ville:
     path:     /api/get/annonce/categorie/{categorie}/ville/{ville}/{page}
-    defaults: { _controller:MonApiBundle:ApiRest:getcateville, page: 1  }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:getcateville, page: 1  }
     methods:  [GET]
 ajout_annonce_categorie:
     path:     /api/add/categorie/{categorie}
-    defaults: { _controller:MonApiBundle:ApiRest:postcategorie }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:postcategorie }
     methods:  [POST]
 ajout_annonce_ville:
     path:     /api/add/ville/{ville}
-    defaults: { _controller:MonApiBundle:ApiRest:postville }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:postville }
     methods:  [POST]
 delete_annonce:
     path:     /api/delete/annonce/{annonce}
-    defaults: { _controller:MonApiBundle:ApiRest:deleteannonce }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:deleteannonce }
     methods:  [DELETE]
 ajout_annonce:
     path:     /api/add/annonce
-    defaults: { _controller:MonApiBundle:ApiRest:postannonce }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:postannonce }
     methods:  [POST]
 modif_annonce:
     path:     /api/edit/annonce/{id}
-    defaults: { _controller:MonApiBundle:ApiRest:postannonceedit }
+    defaults: { _controller:MonAnnonceBundle:ApiRest:postannonceedit }
     methods:  [POST]

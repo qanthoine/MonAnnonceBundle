@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Form;
+namespace MonAnnonceBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -27,7 +27,7 @@ class ImagesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MonApiBundle\Entity\Images'
+            'data_class' => 'MonAnnonceBundle\Entity\Images'
         ));
     }
 }

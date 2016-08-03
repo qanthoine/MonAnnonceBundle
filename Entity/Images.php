@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Entity;
+namespace MonAnnonceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Images
  *
  * @ORM\Table(name="images")
- * @ORM\Entity(repositoryClass="MonApiBundle\Repository\ImagesRepository")
+ * @ORM\Entity(repositoryClass="MonAnnonceBundle\Repository\ImagesRepository")
  * @ORM\HasLifecycleCallbacks
  */
 class Images
@@ -96,11 +96,11 @@ class Images
     /**
      * Set advert
      *
-     * @param \MonApiBundle\Entity\Annonce $annonce
+     * @param \MonAnnonceBundle\Entity\Annonce $annonce
      *
      * @return Images
      */
-    public function setAnnonce(\MonApiBundle\Entity\Annonce $annonce = null)
+    public function setAnnonce(\MonAnnonceBundle\Entity\Annonce $annonce = null)
     {
         $this->annonce = $annonce;
         return $this;
@@ -109,7 +109,7 @@ class Images
     /**
      * Get annonce
      *
-     * @return \MonApiBundle\Entity\Annonce
+     * @return \MonAnnonceBundle\Entity\Annonce
      */
     public function getAnnonce()
     {

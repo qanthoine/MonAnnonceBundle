@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Form;
+namespace MonAnnonceBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -28,7 +28,7 @@ class VillesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MonApiBundle\Entity\Villes'
+            'data_class' => 'MonAnnonceBundle\Entity\Villes'
         ));
     }
 }

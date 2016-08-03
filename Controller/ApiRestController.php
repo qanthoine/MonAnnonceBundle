@@ -5,15 +5,15 @@
  * Date: 16/07/2016
  * Time: 00:12
  */
-namespace MonApiBundle\Controller;
+namespace MonAnnonceBundle\Controller;
 
 
-use MonApiBundle\Entity\Annonce;
-use Proxies\__CG__\MonApiBundle\Entity\Images;
+use MonAnnonceBundle\Entity\Annonce;
+use Proxies\__CG__\MonAnnonceBundle\Entity\Images;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use MonApiBundle\Entity\Categories;
-use MonApiBundle\Entity\Villes;
+use MonAnnonceBundle\Entity\Categories;
+use MonAnnonceBundle\Entity\Villes;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -39,7 +39,7 @@ class ApiRestController extends Controller
             if(strlen($categorie) >= 5 & strlen($categorie <= 60))
             {
                 $em = $this->getDoctrine()->getManager();
-                $verif = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('name' => $categorie));
+                $verif = $em->getRepository('MonAnnonceBundle:Categories')->findOneBy(array('name' => $categorie));
                 if (!$verif)
                 {
                     $categorie_new = new Categories();
@@ -49,7 +49,8 @@ class ApiRestController extends Controller
                     return new JsonResponse([
                         'success' => true,
                         'code' => "200",
-                        'message' => "Categorie ($categorie) ajoutée !",
+                        'message' => "Categorie $categorie ajoutée !",
+                        'id' => $categorie_new->getId()
                     ]);
                 }
                 else
@@ -88,9 +89,9 @@ class ApiRestController extends Controller
         {
             if(strlen($ville) >= 5 & strlen($ville) <= 6)
             {
-                $existe = $em->getRepository('MonApiBundle:VillesFrance')->findOneBy(array('villeCodePostal' => $ville));
+                $existe = $em->getRepository('MonAnnonceBundle:VillesFrance')->findOneBy(array('villeCodePostal' => $ville));
                 if ($existe) {
-                    $verif = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('codePostal' => $ville));
+                    $verif = $em->getRepository('MonAnnonceBundle:Villes')->findOneBy(array('codePostal' => $ville));
                     if (!$verif) {
                         $ville_new = new Villes();
                         $ville_new->setCodePostal($ville);
@@ -99,7 +100,8 @@ class ApiRestController extends Controller
                         return new JsonResponse([
                             'success' => true,
                             'code' => "200",
-                            'message' => "Ville ($ville) ajoutée !",
+                            'message' => "Ville $ville ajoutée !",
+                            'id' => $ville_new->getId()
                         ]);
                     } else {
                         return new JsonResponse([
@@ -141,8 +143,8 @@ class ApiRestController extends Controller
         }
         else
         {
-            $recuperation = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('id' => $annonce));
-            $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $recuperation));
+            $recuperation = $em->getRepository('MonAnnonceBundle:Annonce')->findOneBy(array('id' => $annonce));
+            $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $recuperation));
             if(!$images)
             {
                 $image_recup = "Aucune Image";
@@ -189,7 +191,7 @@ class ApiRestController extends Controller
      * @Route("/api/delete/annonce/")
      * @Method("DELETE")
      */
-    public function deleteannonceAction($annonce)
+    public function deleteannonceAction($annonce) // Utilise Annonce ID
     {
         $em = $this->getDoctrine()->getManager();
         if(is_null($annonce))
@@ -200,7 +202,7 @@ class ApiRestController extends Controller
         }
         else
         {
-            $recuperation = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('id' => $annonce));
+            $recuperation = $em->getRepository('MonAnnonceBundle:Annonce')->findOneBy(array('id' => $annonce));
             if(!$recuperation)
             {
                 return new JsonResponse([
@@ -214,7 +216,8 @@ class ApiRestController extends Controller
             return new JsonResponse([
                 'success' => true,
                 'code'    => "200",
-                'message' => "Annonce ($annonce) suprimée !",
+                'message' => "Annonce suprimée !",
+                'id' => $annonce,
             ]);
         }
     } // Utilise Annonce ID
@@ -234,7 +237,7 @@ class ApiRestController extends Controller
         }
         else
         {
-            $recup_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('slug' => $categorie));
+            $recup_categorie = $em->getRepository('MonAnnonceBundle:Categories')->findOneBy(array('slug' => $categorie));
             if(!$recup_categorie)
             {
                 return new JsonResponse([
@@ -244,12 +247,12 @@ class ApiRestController extends Controller
                 ]);
             }
             $nb_annonce_page = 10;
-            $count = $em->getRepository('MonApiBundle:Annonce')->countannonce($recup_categorie);
+            $count = $em->getRepository('MonAnnonceBundle:Annonce')->countannonce($recup_categorie);
             $nb_total_page = ceil($count/$nb_annonce_page);
             if($nb_total_page == 1)
             {
                 $all_annonce = array();
-                $annonce = $em->getRepository('MonApiBundle:Annonce')->findBy(array('categories' => $recup_categorie),array('id' => 'asc'));
+                $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findBy(array('categories' => $recup_categorie),array('id' => 'asc'));
                 foreach ($annonce as $annonceNew)
                 {
                     if($annonceNew->getprix() == null)
@@ -260,7 +263,7 @@ class ApiRestController extends Controller
                     {
                         $prix = $annonceNew->getprix();
                     }
-                    $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                    $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
                     if(!$images)
                     {
                         $image_recup = "Aucune Image";
@@ -289,7 +292,7 @@ class ApiRestController extends Controller
                 {
                     $first_page = (($page-1)*$nb_annonce_page);
                     $all_annonce = array();
-                    $annonce = $em->getRepository('MonApiBundle:Annonce')->annoncepage($recup_categorie, $nb_annonce_page, $first_page);
+                    $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->annoncepage($recup_categorie, $nb_annonce_page, $first_page);
                     foreach ($annonce as $annonceNew)
                     {
                         if($annonceNew->getprix() == null)
@@ -300,7 +303,7 @@ class ApiRestController extends Controller
                         {
                             $prix = $annonceNew->getprix();
                         }
-                        $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                        $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
                         if(!$images)
                         {
                             $image_recup = "Aucune Image";
@@ -352,22 +355,22 @@ class ApiRestController extends Controller
         }
         else
         {
-            $recup_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('codePostal' => $ville));
+            $recup_ville = $em->getRepository('MonAnnonceBundle:Villes')->findOneBy(array('codePostal' => $ville));
             if(!$recup_ville)
             {
                 return new JsonResponse([
                     'success' => false,
                     'code'    => "409",
-                    'message' => "Cette categorie n'existe pas",
+                    'message' => "Cette ville n'existe pas",
                 ]);
             }
             $nb_annonce_page = 10;
-            $count = $em->getRepository('MonApiBundle:Annonce')->countannonceville($recup_ville);
+            $count = $em->getRepository('MonAnnonceBundle:Annonce')->countannonceville($recup_ville);
             $nb_total_page = ceil($count/$nb_annonce_page);
             if($nb_total_page == 1)
             {
                 $all_annonce = array();
-                $annonce = $em->getRepository('MonApiBundle:Annonce')->findBy(array('villes' => $recup_ville),array('id' => 'asc'));
+                $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findBy(array('villes' => $recup_ville),array('id' => 'asc'));
                 foreach ($annonce as $annonceNew)
                 {
                     if($annonceNew->getprix() == null)
@@ -378,7 +381,7 @@ class ApiRestController extends Controller
                     {
                         $prix = $annonceNew->getprix();
                     }
-                    $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                    $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
                     if(!$images)
                     {
                         $image_recup = "Aucune Image";
@@ -407,7 +410,7 @@ class ApiRestController extends Controller
                 {
                     $first_page = (($page-1)*$nb_annonce_page);
                     $all_annonce = array();
-                    $annonce = $em->getRepository('MonApiBundle:Annonce')->annoncepageville($recup_ville, $nb_annonce_page, $first_page);
+                    $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->annoncepageville($recup_ville, $nb_annonce_page, $first_page);
                     foreach ($annonce as $annonceNew)
                     {
                         if($annonceNew->getprix() == null)
@@ -418,7 +421,7 @@ class ApiRestController extends Controller
                         {
                             $prix = $annonceNew->getprix();
                         }
-                        $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                        $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
                         if(!$images)
                         {
                             $image_recup = "Aucune Image";
@@ -470,8 +473,8 @@ class ApiRestController extends Controller
         }
         else
         {
-            $recup_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('codePostal' => $ville));
-            $recup_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('slug' => $categorie));
+            $recup_ville = $em->getRepository('MonAnnonceBundle:Villes')->findOneBy(array('codePostal' => $ville));
+            $recup_categorie = $em->getRepository('MonAnnonceBundle:Categories')->findOneBy(array('slug' => $categorie));
             if(!$recup_ville || !$recup_categorie)
             {
                 return new JsonResponse([
@@ -481,12 +484,12 @@ class ApiRestController extends Controller
                 ]);
             }
             $nb_annonce_page = 10;
-            $count = $em->getRepository('MonApiBundle:Annonce')->countcategorieville($recup_ville, $recup_categorie);
+            $count = $em->getRepository('MonAnnonceBundle:Annonce')->countcategorieville($recup_ville, $recup_categorie);
             $nb_total_page = ceil($count/$nb_annonce_page);
             if($nb_total_page == 1)
             {
                 $all_annonce = array();
-                $annonce = $em->getRepository('MonApiBundle:Annonce')->findBy(array('villes' => $recup_ville, 'categories' => $recup_categorie) ,array('id' => 'asc'));
+                $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findBy(array('villes' => $recup_ville, 'categories' => $recup_categorie) ,array('id' => 'asc'));
                 foreach ($annonce as $annonceNew)
                 {
                     if($annonceNew->getprix() == null)
@@ -497,7 +500,7 @@ class ApiRestController extends Controller
                     {
                         $prix = $annonceNew->getprix();
                     }
-                    $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                    $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
                     if(!$images)
                     {
                         $image_recup = "Aucune Image";
@@ -516,7 +519,7 @@ class ApiRestController extends Controller
                 return new JsonResponse([
                     'success' => true,
                     'code' => "200",
-                    'message' => "Affichage de $count annonce(s) pour la ville : $ville et categorie $categorie",
+                    'message' => "Affichage de $count annonce(s) pour la ville : $ville et categorie : $categorie",
                     'Annonces :' => $all_annonce,
                 ]);
             }
@@ -526,7 +529,7 @@ class ApiRestController extends Controller
                 {
                     $first_page = (($page-1)*$nb_annonce_page);
                     $all_annonce = array();
-                    $annonce = $em->getRepository('MonApiBundle:Annonce')->pagecategorieville($recup_ville, $recup_categorie, $nb_annonce_page, $first_page);
+                    $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->pagecategorieville($recup_ville, $recup_categorie, $nb_annonce_page, $first_page);
                     foreach ($annonce as $annonceNew)
                     {
                         if($annonceNew->getprix() == null)
@@ -537,7 +540,7 @@ class ApiRestController extends Controller
                         {
                             $prix = $annonceNew->getprix();
                         }
-                        $images = $em->getRepository('MonApiBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
+                        $images = $em->getRepository('MonAnnonceBundle:Images')->findBy(array('annonce' => $annonceNew->getid()));
                         if(!$images)
                         {
                             $image_recup = "Aucune Image";
@@ -579,7 +582,7 @@ class ApiRestController extends Controller
      * @Route("/api/add/annonce")
      * @Method("POST")
      */
-    public function postannonceAction(Request $request) // Requiert les paramètres obligatoire (Titre / Description / Categorie (ID) / Ville (ID))
+    public function postannonceAction(Request $request) // Requiert les paramètres obligatoire (Titre / Description / Categorie (SLUG) / Ville (Code Postal))
     {
         $em = $this->getDoctrine()->getManager();
         if(is_null($request->query->get('titre')) || strlen($request->query->get('titre')) <= 5 || strlen($request->query->get('titre')) >= 60 || !is_string($request->query->get('titre')))
@@ -593,7 +596,7 @@ class ApiRestController extends Controller
         }
         else
         {
-            $verif_titre = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('titre' => $request->query->get('titre')));
+            $verif_titre = $em->getRepository('MonAnnonceBundle:Annonce')->findOneBy(array('titre' => $request->query->get('titre')));
             if($verif_titre)
             {
                 return new JsonResponse([
@@ -612,7 +615,7 @@ class ApiRestController extends Controller
                 'info'    => "Erreur au niveau de Description"
             ]);
         }
-        if(is_null($request->query->get('categorie')) || !is_numeric($request->query->get('categorie')))
+        if(is_null($request->query->get('categorie')) || !is_string($request->query->get('categorie')))
         {
             return new JsonResponse([
                 'success' => false,
@@ -623,7 +626,7 @@ class ApiRestController extends Controller
         }
         else
         {
-            $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('id' => $request->query->get('categorie')));
+            $verif_categorie = $em->getRepository('MonAnnonceBundle:Categories')->findOneBy(array('slug' => $request->query->get('categorie')));
             if(!$verif_categorie)
             {
                 return new JsonResponse([
@@ -648,7 +651,7 @@ class ApiRestController extends Controller
         }
         else
         {
-            $verif_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('id' => $request->query->get('ville')));
+            $verif_ville = $em->getRepository('MonAnnonceBundle:Villes')->findOneBy(array('codePostal' => $request->query->get('ville')));
             if(!$verif_ville)
             {
                 return new JsonResponse([
@@ -705,7 +708,7 @@ class ApiRestController extends Controller
             'success' => true,
             'code' => "200",
             'message' => "Annonce ajoutée avec succès",
-            'info' => 'Annonce n°' . $annonce->getId()
+            'id' => $annonce->getId()
         ]);
     }
 
@@ -722,7 +725,7 @@ class ApiRestController extends Controller
             $response->setStatusCode(400);
             return $response;
         }
-        $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('id' => $id));
+        $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findOneBy(array('id' => $id));
         if(!$annonce)
         {
             return new JsonResponse([
@@ -735,7 +738,7 @@ class ApiRestController extends Controller
         {
             if(strlen($request->query->get('titre')) >= 5 & strlen($request->query->get('titre')) <= 60 & is_string($request->query->get('titre')))
             {
-                $verif_titre = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('titre' => $request->query->get('titre')));
+                $verif_titre = $em->getRepository('MonAnnonceBundle:Annonce')->findOneBy(array('titre' => $request->query->get('titre')));
                 if($verif_titre)
                 {
                     return new JsonResponse([
@@ -785,7 +788,7 @@ class ApiRestController extends Controller
         }
         if(!is_null($request->query->get('categorie')) & is_numeric($request->query->get('categorie')))
         {
-            $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findOneBy(array('id' => $request->query->get('categorie')));
+            $verif_categorie = $em->getRepository('MonAnnonceBundle:Categories')->findOneBy(array('slug' => $request->query->get('categorie')));
             if(!$verif_categorie)
             {
                 return new JsonResponse([
@@ -802,7 +805,7 @@ class ApiRestController extends Controller
         }
         if(!is_null($request->query->get('ville')) & is_numeric($request->query->get('ville')))
         {
-            $verif_ville = $em->getRepository('MonApiBundle:Villes')->findOneBy(array('id' => $request->query->get('ville')));
+            $verif_ville = $em->getRepository('MonAnnonceBundle:Villes')->findOneBy(array('codePostal' => $request->query->get('ville')));
             if(!$verif_ville)
             {
                 return new JsonResponse([
@@ -848,7 +851,7 @@ class ApiRestController extends Controller
             'success' => true,
             'code' => "200",
             'message' => "Annonce modifiée avec succès",
-            'info' => 'Annonce n°'.$annonce->getId()
+            'id' => $annonce->getId()
         ]);
     }
 }

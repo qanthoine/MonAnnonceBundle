@@ -5,23 +5,23 @@
  * Date: 11/07/2016
  * Time: 04:35
  */
-namespace MonApiBundle\Controller;
+namespace MonAnnonceBundle\Controller;
 
-use MonApiBundle\Entity\Annonce;
-use MonApiBundle\Entity\Categories;
-use MonApiBundle\Entity\Villes;
-use MonApiBundle\Form\AnnonceType;
-use MonApiBundle\Form\CategoriesType;
-use MonApiBundle\Form\VillesType;
+use MonAnnonceBundle\Entity\Annonce;
+use MonAnnonceBundle\Entity\Categories;
+use MonAnnonceBundle\Entity\Villes;
+use MonAnnonceBundle\Form\AnnonceType;
+use MonAnnonceBundle\Form\CategoriesType;
+use MonAnnonceBundle\Form\VillesType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class ApiController extends Controller
+class SiteController extends Controller
 {
     public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $annonce = $em->getRepository('MonApiBundle:Annonce')->findAnnonce();
+        $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findAnnonce();
         $categorie = new Categories();
         $form_categorie = $this->createForm(CategoriesType::class, $categorie);
         $form_categorie->handleRequest($request);
@@ -37,7 +37,7 @@ class ApiController extends Controller
         }
         if($form_ville->isValid())
         {
-            $verif = $em->getRepository('MonApiBundle:VillesFrance')->findBy(array('villeCodePostal' => $ville->getCodePostal()));
+            $verif = $em->getRepository('MonAnnonceBundle:VillesFrance')->findBy(array('villeCodePostal' => $ville->getCodePostal()));
             if(!$verif)
             {
                 $request->getSession()->getFlashBag()->add('message', "La ville n'existe pas !");
@@ -48,13 +48,13 @@ class ApiController extends Controller
             $request->getSession()->getFlashBag()->add('message', "Ville ajoutée !");
             return $this->redirectToRoute('mon_api_homepage');
         }
-        return $this->render('MonApiBundle:Api:index.html.twig', array('annonce' => $annonce, 'form_categorie' => $form_categorie->createView(), 'form_ville' => $form_ville->createView()));
+        return $this->render('MonAnnonceBundle:Api:index.html.twig', array('annonce' => $annonce, 'form_categorie' => $form_categorie->createView(), 'form_ville' => $form_ville->createView()));
     }
     public function addAction(Request $request, $slug = null)
     {
         $em = $this->getDoctrine()->getManager();
-        $verif_categorie = $em->getRepository('MonApiBundle:Categories')->findAll();
-        $verif_ville = $em->getRepository('MonApiBundle:Villes')->findAll();
+        $verif_categorie = $em->getRepository('MonAnnonceBundle:Categories')->findAll();
+        $verif_ville = $em->getRepository('MonAnnonceBundle:Villes')->findAll();
         if(!$verif_categorie)
         {
             $request->getSession()->getFlashBag()->add('message', "Merci de créer une categorie !");
@@ -74,7 +74,7 @@ class ApiController extends Controller
         }
         else
         {
-            $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneBy(array('slug' => $slug));
+            $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findOneBy(array('slug' => $slug));
             if(!$annonce)
             {
                 $request->getSession()->getFlashBag()->add('message', "L'annonce n'existe pas !");
@@ -98,34 +98,34 @@ class ApiController extends Controller
             $request->getSession()->getFlashBag()->add('message', $notice);
             return $this->redirectToRoute('mon_api_homepage');
         }
-        return $this->render('MonApiBundle:Api:add.html.twig', array('form' => $form->createView(), 'titre' => $page_title, 'info' => $annonce));
+        return $this->render('MonAnnonceBundle:Api:add.html.twig', array('form' => $form->createView(), 'titre' => $page_title, 'info' => $annonce));
     }
     public function showAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneby(array('slug' => $slug));
+        $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findOneby(array('slug' => $slug));
         if(!$annonce)
         {
             $request->getSession()->getFlashBag()->add('message', "L'annonce n'existe pas !");
             return $this->redirect($this->generateUrl('mon_api_homepage'));
         }
-        return $this->render('MonApiBundle:Api:show.html.twig', array('annonce' => $annonce));
+        return $this->render('MonAnnonceBundle:Api:show.html.twig', array('annonce' => $annonce));
     }
     public function showimageAction(Request $request, $image)
     {
         $em = $this->getDoctrine()->getManager();
-        $verif = $em->getRepository('MonApiBundle:Images')->findOneby(array('image' => $image));
+        $verif = $em->getRepository('MonAnnonceBundle:Images')->findOneby(array('image' => $image));
         if(!$verif)
         {
             $request->getSession()->getFlashBag()->add('message', "L'image n'est pas visualisable !");
             return $this->redirect($this->generateUrl('mon_api_homepage'));
         }
-        return $this->render('MonApiBundle:Api:showimage.html.twig', array('image' => $verif));
+        return $this->render('MonAnnonceBundle:Api:showimage.html.twig', array('image' => $verif));
     }
     public function deleteAction(Request $request, $slug)
     {
         $em = $this->getDoctrine()->getManager();
-        $annonce = $em->getRepository('MonApiBundle:Annonce')->findOneby(array('slug' => $slug));
+        $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findOneby(array('slug' => $slug));
         if(!$annonce)
         {
             $request->getSession()->getFlashBag()->add('message', "L'annonce n'existe pas !");
@@ -141,23 +141,23 @@ class ApiController extends Controller
         $em = $this->getDoctrine()->getManager();
         if(is_null($categorie)) // Categorie est null, j'affiche toutes les categories puis toutes les villes de chaque categorie
         {
-            $categorie = $em->getRepository('MonApiBundle:Categories')->findAll();
-            $ville = $em->getRepository('MonApiBundle:Annonce')->findVilles();
-            return $this->render('MonApiBundle:Api:search.html.twig', array('categorie' => $categorie, 'ville' => $ville));
+            $categorie = $em->getRepository('MonAnnonceBundle:Categories')->findAll();
+            $ville = $em->getRepository('MonAnnonceBundle:Annonce')->findVilles();
+            return $this->render('MonAnnonceBundle:Api:search.html.twig', array('categorie' => $categorie, 'ville' => $ville));
         }
         else
         {
             if(is_null($ville))
             {
-                $ville = $em->getRepository('MonApiBundle:Annonce')->findOne();
-                return $this->render('MonApiBundle:Api:search.html.twig', array('categorie' => $categorie, 'ville' => $ville));
+                $ville = $em->getRepository('MonAnnonceBundle:Annonce')->findOne();
+                return $this->render('MonAnnonceBundle:Api:search.html.twig', array('categorie' => $categorie, 'ville' => $ville));
             }
             else
             {
-                $categorie_entity = $em->getRepository('MonApiBundle:Categories')->findOneby(array('slug' => $categorie));
-                $ville_entity = $em->getRepository('MonApiBundle:Villes')->findOneby(array('codePostal' => $ville));
-                $annonce = $em->getRepository('MonApiBundle:Annonce')->findCateVille($categorie_entity, $ville_entity);
-                return $this->render('MonApiBundle:Api:search.html.twig', array('annonce' => $annonce, 'categorie' => $categorie, 'ville' => $ville));
+                $categorie_entity = $em->getRepository('MonAnnonceBundle:Categories')->findOneby(array('slug' => $categorie));
+                $ville_entity = $em->getRepository('MonAnnonceBundle:Villes')->findOneby(array('codePostal' => $ville));
+                $annonce = $em->getRepository('MonAnnonceBundle:Annonce')->findCateVille($categorie_entity, $ville_entity);
+                return $this->render('MonAnnonceBundle:Api:search.html.twig', array('annonce' => $annonce, 'categorie' => $categorie, 'ville' => $ville));
             }
         }
     }

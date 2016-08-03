@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Entity;
+namespace MonAnnonceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Categories
  *
  * @ORM\Table(name="categories")
- * @ORM\Entity(repositoryClass="MonApiBundle\Repository\CategoriesRepository")
+ * @ORM\Entity(repositoryClass="MonAnnonceBundle\Repository\CategoriesRepository")
  * @UniqueEntity(
  *     fields={"name"},
  *     errorPath="name",

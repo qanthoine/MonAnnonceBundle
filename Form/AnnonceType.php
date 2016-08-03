@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Form;
+namespace MonAnnonceBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,11 +24,11 @@ class AnnonceType extends AbstractType
             ->add('description', TextareaType::class)
             ->add('prix', TextType::class, array('required' => false))
             ->add('villes', EntityType::class, array(
-                'class'        => 'MonApiBundle:Villes',
+                'class'        => 'MonAnnonceBundle:Villes',
                 'choice_label' => 'codePostal',
             ))
             ->add('categories', EntityType::class, array(
-                'class'        => 'MonApiBundle:Categories',
+                'class'        => 'MonAnnonceBundle:Categories',
                 'choice_label' => 'name',
             ))
             ->add('images', CollectionType::class, array('entry_type' => ImagesType::class, 'allow_add' => true, 'allow_delete' => true))
@@ -42,7 +42,7 @@ class AnnonceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MonApiBundle\Entity\Annonce'
+            'data_class' => 'MonAnnonceBundle\Entity\Annonce'
         ));
     }
 }

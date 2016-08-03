@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Form;
+namespace MonAnnonceBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -28,7 +28,7 @@ class CategoriesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'MonApiBundle\Entity\Categories'
+            'data_class' => 'MonAnnonceBundle\Entity\Categories'
         ));
     }
 }

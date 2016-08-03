@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Entity;
+namespace MonAnnonceBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

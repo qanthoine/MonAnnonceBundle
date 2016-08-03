@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Entity;
+namespace MonAnnonceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Villes
  *
  * @ORM\Table(name="villes")
- * @ORM\Entity(repositoryClass="MonApiBundle\Repository\VillesRepository")
+ * @ORM\Entity(repositoryClass="MonAnnonceBundle\Repository\VillesRepository")
  * @UniqueEntity(
  *     fields={"codePostal"},
  *     errorPath="codePostal",

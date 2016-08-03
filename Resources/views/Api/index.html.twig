@@ -1,4 +1,4 @@
-{% extends "MonApiBundle::layout.html.twig" %}
+{% extends "MonAnnonceBundle::layout.html.twig" %}
 {% block title %}Liste des Annonces{% endblock title %}
 {% block body %}
     {% for flashMessage in app.session.flashbag.get('message') %}
@@ -7,15 +7,17 @@
         </div>
     {% endfor %}
     <div class="new_categorie">
+        <h3>Nouvelle Categorie</h3>
         {{ form_start(form_categorie) }}
-        {{ form_label(form_categorie.name, "Nouvelle Categorie : ") }}
+        {{ form_label(form_categorie.name, "Nom de Categorie : ") }}
         {{ form_errors(form_categorie.name) }}
         {{ form_widget(form_categorie.name) }}
         {{ form_end(form_categorie)}}
     </div>
     <div class="new_categorie">
+        <h3>Nouvelle Ville</h3>
         {{ form_start(form_ville) }}
-        {{ form_label(form_ville.codePostal, "Nouvelle Ville : ") }}
+        {{ form_label(form_ville.codePostal, "Code Postal : ") }}
         {{ form_errors(form_ville.codePostal) }}
         {{ form_widget(form_ville.codePostal) }}
         {{ form_end(form_ville)}}

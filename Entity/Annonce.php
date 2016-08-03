@@ -1,6 +1,6 @@
 <?php
 
-namespace MonApiBundle\Entity;
+namespace MonAnnonceBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Annonce
  *
  * @ORM\Table(name="annonce")
- * @ORM\Entity(repositoryClass="MonApiBundle\Repository\AnnonceRepository")
+ * @ORM\Entity(repositoryClass="MonAnnonceBundle\Repository\AnnonceRepository")
  * @UniqueEntity(
  *     fields={"titre"},
  *     errorPath="titre",
@@ -73,7 +73,7 @@ class Annonce
 
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="MonApiBundle\Entity\Categories", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="MonAnnonceBundle\Entity\Categories", cascade={"persist"})
      */
     private $categories;
     /**
@@ -83,7 +83,7 @@ class Annonce
 
     /**
      * @var int
-     * @ORM\ManyToOne(targetEntity="MonApiBundle\Entity\Villes", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="MonAnnonceBundle\Entity\Villes", cascade={"persist"})
      */
     private $villes;
 
@@ -251,11 +251,11 @@ class Annonce
     /**
      * Add image
      *
-     * @param \MonApiBundle\Entity\Images $image
+     * @param \MonAnnonceBundle\Entity\Images $image
      *
      * @return Annonce
      */
-    public function addImage(\MonApiBundle\Entity\Images $image)
+    public function addImage(\MonAnnonceBundle\Entity\Images $image)
     {
         $this->images[] = $image;
         return $this;
@@ -263,9 +263,9 @@ class Annonce
     /**
      * Remove image
      *
-     * @param \MonApiBundle\Entity\Images $image
+     * @param \MonAnnonceBundle\Entity\Images $image
      */
-    public function removeImage(\MonApiBundle\Entity\Images $image)
+    public function removeImage(\MonAnnonceBundle\Entity\Images $image)
     {
         $this->images->removeElement($image);
     }
