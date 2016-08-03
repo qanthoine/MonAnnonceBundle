@@ -12,8 +12,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="villes")
  * @ORM\Entity(repositoryClass="MonApiBundle\Repository\VillesRepository")
  * @UniqueEntity(
- *     fields={"titre"},
- *     errorPath="titre",
+ *     fields={"codePostal"},
+ *     errorPath="codePostal",
  *     message="Le code postal est déjà utilisé. Merci d'en choisir un autre"
  * )
  */

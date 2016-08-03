@@ -13,8 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="categories")
  * @ORM\Entity(repositoryClass="MonApiBundle\Repository\CategoriesRepository")
  * @UniqueEntity(
- *     fields={"titre"},
- *     errorPath="titre",
+ *     fields={"name"},
+ *     errorPath="name",
  *     message="Le nom est déjà utilisé. Merci d'en choisir un autre"
  * )
  */
